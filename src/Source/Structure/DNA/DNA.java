@@ -23,20 +23,19 @@ public class DNA extends Acid{
     @Override
     public void setGene(Gene gene, Integer position) {
         this.logger.info("Set gene " + gene.toString() + " to position " + position.toString());
+        this.genes.set(position, gene);
     }
 
     @Override
     public Gene getGene(Integer position) {
-        if (position < this.genes.size()){
-            Gene result = this.genes.get(position);
-            this.logger.info("Get gene " + result.toString() + " on position " + position.toString());
-            return result;
-        }else
-            throw new ArrayIndexOutOfBoundsException();
+        Gene result = this.genes.get(position);
+        this.logger.info("Get gene " + result.toString() + " on position " + position.toString());
+        return result;
     }
 
     @Override
     public void addGene(Gene gene) {
+        this.genes.add(gene);
         this.logger.info("Add gene " + gene.toString());
     }
 

@@ -9,11 +9,9 @@ public class Nucleotide {
 
     public Nucleotide(NucleotideEnum type){
         this.type = type;
-        this.logger.info("Created " + this.toString());
     }
 
     public NucleotideEnum getType() {
-        this.logger.info("Get type: type=" + this.type.name());
         return type;
     }
 

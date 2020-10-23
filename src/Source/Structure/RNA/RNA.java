@@ -25,6 +25,7 @@ public class RNA extends Acid{
     @Override
     public void setGene(Gene gene, Integer position) {
         this.logger.info("Set gene " + gene.toString() + " to position " + position.toString());
+        this.genes.set(position, gene);
     }
 
     @Override
@@ -39,6 +40,7 @@ public class RNA extends Acid{
 
     @Override
     public void addGene(Gene gene) {
+        this.genes.add(gene);
         this.logger.info("Add gene " + gene.toString());
     }
 
@@ -49,7 +51,7 @@ public class RNA extends Acid{
 
     @Override
     public RNA mutate(){
-        this.logger.info("RNA is immutable");
+        this.logger.info("Mutation failed");
         return this;
     }
 

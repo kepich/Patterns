@@ -14,7 +14,6 @@ public class Gene {
     }
 
     public Chain getChain() {
-        this.logger.info("Get chain " + this.chain.toString());
         return this.chain;
     }
 
