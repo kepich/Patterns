@@ -4,11 +4,14 @@ import Source.Chain.Chain;
 import Source.MyLogger;
 import Source.Nucleotide.Nucleotide;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Gene {
     private Chain chain;
     private MyLogger logger = new MyLogger(Gene.class.getName());
 
-    public Gene(Chain chain){
+    public Gene(Chain chain) {
         this.chain = chain;
         this.logger.info("Created " + this.toString());
     }
@@ -17,21 +20,26 @@ public class Gene {
         return this.chain;
     }
 
-    public void setChain(Chain chain){
+    public void setChain(Chain chain) {
         this.logger.info("Set chain " + chain.toString());
         this.chain = chain;
     }
 
-    public Nucleotide getNucleotide(Integer pos){
-        Nucleotide result = this.chain.getNucleotide(pos);
-        this.logger.info("Get nucleotide " + chain.toString());
-
-        return result;
+    public Gene replicate(Float mutateProbability, Nucleotide[] availableNucleotides) {
+        logger.info("Replicate with mutation probability " + mutateProbability.toString());
+        return new Gene(this.getChain().replicate(mutateProbability, availableNucleotides));
     }
 
-    public void setNucleotide(Integer pos, Nucleotide nucleotide){
-        this.logger.info("Set nucleotide " + nucleotide.toString() + "  to pos " + pos.toString());
-        this.chain.setNucleotide(pos, nucleotide);
+    public Gene mutate(Float probability, Nucleotide[] availableNucleotides) {
+        logger.info("Mutate with mutation probability " + probability.toString());
+        Chain chain = this.replicate(probability, availableNucleotides).getChain();
+        chain.mutate(probability, availableNucleotides);
+        return new Gene(chain);
+    }
+
+    public List<Nucleotide> split() {
+        this.logger.info("Split " + this.toString());
+        return new ArrayList<>(this.getChain().getNucleotides());
     }
 
     @Override

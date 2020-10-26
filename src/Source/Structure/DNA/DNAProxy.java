@@ -4,7 +4,6 @@ import Source.Chain.Chain;
 import Source.Gene.Gene;
 import Source.MyLogger;
 import Source.Nucleotide.Nucleotide;
-import Source.Nucleotide.NucleotideEnum;
 import Source.Structure.Acid.Acid;
 import Source.Structure.Acid.IAcid;
 
@@ -18,35 +17,20 @@ public class DNAProxy implements IAcid {
 
     public DNAProxy(Nucleotide[] nucleotides) throws UnexpectedException {
         this.logger = new MyLogger(DNAProxy.class.getName());
+        this.dna = new DNA(nucleotides);
+        this.logger.info("Created by Nucleotides" + this.toString());
+    }
 
-        ArrayList<Gene> genes = new ArrayList<>();
-        int geneSize = 4;
-
-        for (int i = 0; i < nucleotides.length; i += geneSize){
-            int tempSize = 0;
-            ArrayList<Nucleotide> tempNucleotides = new ArrayList<>();
-
-            while (((i + tempSize) < nucleotides.length) && tempSize < geneSize){
-                if (nucleotides[i + tempSize].getType() == NucleotideEnum.URACIL)
-                    throw new UnexpectedException("URACIL is not available for DNA");
-
-                tempNucleotides.add(nucleotides[i + tempSize++]);
-            }
-            genes.add(new Gene(new Chain(tempNucleotides)));
-        }
-
+    public DNAProxy(ArrayList<Gene> genes) throws UnexpectedException {
+        this.logger = new MyLogger(DNAProxy.class.getName());
         this.dna = new DNA(genes);
-
-        this.logger.info("Created " + this.toString());
+        this.logger.info("Created by Genes" + this.toString());
     }
 
     @Override
     public void setGene(Gene gene, Integer position) {
-        if (position < this.dna.getGenes().size()){
-            this.dna.setGene(gene, position);
-            this.logger.info("Set gene " + gene.toString() + " on position " + position.toString());
-        }else
-            throw new ArrayIndexOutOfBoundsException();
+        this.dna.setGene(gene, position);
+        this.logger.info("Set gene " + gene.toString() + " on position " + position.toString());
     }
 
     @Override
@@ -57,12 +41,9 @@ public class DNAProxy implements IAcid {
 
     @Override
     public Gene getGene(Integer position) {
-        if (position < this.dna.getGenes().size()){
-            Gene result = this.dna.getGene(position);
-            this.logger.info("Get gene " + result.toString() + " on position " + position.toString());
-            return result;
-        }else
-            throw new ArrayIndexOutOfBoundsException();
+        Gene result = this.dna.getGene(position);
+        this.logger.info("Get gene " + result.toString() + " on position " + position.toString());
+        return result;
     }
 
     @Override
@@ -71,7 +52,7 @@ public class DNAProxy implements IAcid {
     }
 
     @Override
-    public Acid replicate() {
+    public Acid replicate() throws UnexpectedException {
         logger.info("Replicate DNA " + this.toString());
         return this.dna.replicate();
     }
@@ -83,7 +64,7 @@ public class DNAProxy implements IAcid {
     }
 
     @Override
-    public Acid mutate() {
+    public Acid mutate() throws UnexpectedException {
         logger.info("Mutate DNA " + this.toString());
         return this.dna.mutate();
     }

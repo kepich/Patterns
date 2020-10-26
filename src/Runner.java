@@ -9,10 +9,10 @@ import java.rmi.UnexpectedException;
 public class Runner {
     private MyLogger logger = new MyLogger(Runner.class.getName());
 
-    public Runner(){
+    public Runner() {
     }
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
         Runner runner = new Runner();
 
         try {
