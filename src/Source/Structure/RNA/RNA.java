@@ -6,9 +6,11 @@ import Source.MyLogger;
 import Source.Nucleotide.Nucleotide;
 import Source.Nucleotide.NucleotideEnum;
 import Source.Structure.Acid.Acid;
+import Source.Structure.Actions.Mutate.Impl.DefaultMutate;
 import Source.Structure.Actions.Mutate.Impl.EmptyMutate;
 import Source.Structure.Actions.Replicate.Impl.DefaultReplicate;
 import Source.Structure.Actions.Split.Impl.DefaultSplit;
+import Source.Structure.Actions.Split.Impl.Mutable.RNAMutableSplit;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
@@ -17,7 +19,7 @@ public class RNA extends Acid {
     public RNA(ArrayList<Gene> genes) throws UnexpectedException {
         this.replicate = new DefaultReplicate();
         this.mutate = new EmptyMutate();
-        this.split = new DefaultSplit();
+        this.split = new RNAMutableSplit(new DefaultSplit());
 
         this.validateGenes(genes);
 
@@ -43,8 +45,8 @@ public class RNA extends Acid {
 
         this.genes = genes;
         this.replicate = new DefaultReplicate();
-        this.mutate = new EmptyMutate();
-        this.split = new DefaultSplit();
+        this.mutate = new DefaultMutate();
+        this.split = new RNAMutableSplit(new DefaultSplit());
         this.logger = new MyLogger(RNA.class.getName());
         this.logger.info("Created " + this.toString());
     }
@@ -91,7 +93,7 @@ public class RNA extends Acid {
     @Override
     public RNA mutate() throws UnexpectedException {
         this.logger.info("Mutation failed");
-        return new RNA(this.mutate.mutate(this.getGenes(), 0.05f, Nucleotide.getRNANucleotides()));
+        return new RNA(this.mutate.mutate(this.getGenes(), 0.01f, Nucleotide.getRNANucleotides()));
     }
 
     @Override

@@ -9,6 +9,7 @@ import Source.Structure.Acid.Acid;
 import Source.Structure.Actions.Mutate.Impl.DefaultMutate;
 import Source.Structure.Actions.Replicate.Impl.DefaultReplicate;
 import Source.Structure.Actions.Split.Impl.DefaultSplit;
+import Source.Structure.Actions.Split.Impl.Mutable.DNAMutableSplit;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class DNA extends Acid {
     public DNA(ArrayList<Gene> genes) throws UnexpectedException {
         this.replicate = new DefaultReplicate();
         this.mutate = new DefaultMutate();
-        this.split = new DefaultSplit();
+        this.split = new DNAMutableSplit(new DefaultSplit());
 
         validateGenes(genes);
 
@@ -42,7 +43,7 @@ public class DNA extends Acid {
         validateGenes(genes);
         this.replicate = new DefaultReplicate();
         this.mutate = new DefaultMutate();
-        this.split = new DefaultSplit();
+        this.split = new DNAMutableSplit(new DefaultSplit());
         this.genes = genes;
         this.logger = new MyLogger(DNA.class.getName());
         this.logger.info("Created " + this.toString());
