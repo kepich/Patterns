@@ -15,9 +15,9 @@ public interface IAcid {
 
     ArrayList<Gene> getGenes();
 
-    Acid replicate() throws UnexpectedException;
+    IAcid replicate() throws UnexpectedException;
 
     Chain split();
 
-    Acid mutate() throws UnexpectedException;
+    IAcid mutate() throws UnexpectedException;
 }

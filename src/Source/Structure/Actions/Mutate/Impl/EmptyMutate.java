@@ -2,6 +2,7 @@ package Source.Structure.Actions.Mutate.Impl;
 
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Actions.Mutate.Mutate;
 
@@ -11,7 +12,7 @@ public class EmptyMutate implements Mutate {
     private MyLogger logger;
 
     public EmptyMutate() {
-        this.logger = new MyLogger(EmptyMutate.class.getName());
+        this.logger = MyLoggerFactory.getLogger(EmptyMutate.class.getName());
         this.logger.info("Created " + this.toString());
     }
 

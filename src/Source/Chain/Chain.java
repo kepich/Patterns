@@ -1,7 +1,11 @@
 package Source.Chain;
 
+import Source.Chain.Context.ChainContext;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
+import Source.Nucleotide.NucleotideEnum;
+import Source.Nucleotide.NucleotideManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +14,10 @@ import java.util.stream.Collectors;
 
 public class Chain {
     private List<Nucleotide> nucleotides;
-    private MyLogger logger = new MyLogger(Chain.class.getName());
+    private MyLogger logger = MyLoggerFactory.getLogger(Chain.class.getName());
     private Random random = new Random();
+    private NucleotideManager nucleotideManager = NucleotideManager.instance();
+
 
     public Chain(List<Nucleotide> nucleotides) {
         this.nucleotides = nucleotides;
@@ -21,17 +27,21 @@ public class Chain {
     public Chain getDNAComplimentary() {
         Chain result = new Chain(
                 this.nucleotides.stream()
-                        .map(nucleotide -> new Nucleotide(Nucleotide.getDNAComplimentary(nucleotide.getType())))
+                        .map(nucleotide -> nucleotideManager.getNucleotide(NucleotideEnum.getDNAComplimentary(nucleotide.getType())))
                         .collect(Collectors.toList())
         );
         this.logger.info("Get complimentary DNA " + this.toString());
         return result;
     }
 
+    public void addNucleotide(Nucleotide nucleotide){
+        this.nucleotides.add(nucleotide);
+    }
+
     public Chain getRNAComplimentary() {
         Chain result = new Chain(
                 this.nucleotides.stream()
-                        .map(nucleotide -> new Nucleotide(Nucleotide.getRNAComplimentary(nucleotide.getType())))
+                        .map(nucleotide -> nucleotideManager.getNucleotide(NucleotideEnum.getRNAComplimentary(nucleotide.getType())))
                         .collect(Collectors.toList())
         );
         this.logger.info("Get complimentary RNA " + this.toString());
@@ -61,8 +71,7 @@ public class Chain {
 
     @Override
     public String toString() {
-        return "Chain {" +
-                "nucleotides=" + nucleotides + '}';
+        return "Chain " + nucleotides;
     }
 
     public List<Nucleotide> getNucleotides() {
@@ -83,8 +92,48 @@ public class Chain {
     }
 
     public void mutate(Float probability, Nucleotide[] availableNucleotides) {
+        this.logger.info("Mutate chain");
         for (int i = 0; i < this.nucleotides.size(); i++)
             if (random.nextFloat() < probability)
                 this.setNucleotide(i, Nucleotide.getRandomNucleotide(availableNucleotides));
     }
+
+    public Memento createMemento(){
+        return new Memento(this.nucleotides);
+    }
+
+    public void resetState(Memento mem){
+        this.logger.info("Reset state");
+        this.nucleotides = new ArrayList<>();
+        NucleotideManager manager = NucleotideManager.instance();
+        for(Nucleotide nucleotide: mem.mem){
+            this.nucleotides.add(manager.getNucleotide(nucleotide.getType()));
+        }
+    }
+
+    public class Memento {
+        private ArrayList<Nucleotide> mem;
+        private MyLogger logger;
+
+        public Memento(List<Nucleotide> mem){
+            this.mem = new ArrayList<>();
+            this.logger = MyLoggerFactory.getLogger(Memento.class.getName());
+            this.logger.info("Created memento");
+            this.setState(mem);
+        }
+
+        private void setState(List<Nucleotide> mem){
+            this.logger.info("(MEMENTO) Set state");
+            NucleotideManager manager = NucleotideManager.instance();
+            for(Nucleotide nucleotide: mem){
+                this.mem.add(manager.getNucleotide(nucleotide.getType()));
+            }
+        }
+
+        private ArrayList<Nucleotide> getState(){
+            this.logger.info("(MEMENTO) getState");
+            return this.mem;
+        }
+    }
+
 }

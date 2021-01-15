@@ -1,6 +1,7 @@
 package Source.Structure.Actions.Mutate.RandomGenerators.GaussianRandom;
 
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 
 import java.util.Random;
 
@@ -9,7 +10,7 @@ public class GaussianRandom {
     private final MyLogger logger;
 
     public GaussianRandom(){
-        this.logger = new MyLogger(GaussianRandom.class.getName());
+        this.logger = MyLoggerFactory.getLogger(GaussianRandom.class.getName());
         this.logger.info("Created " + this.toString());
     }
 

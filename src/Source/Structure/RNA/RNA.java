@@ -2,33 +2,31 @@ package Source.Structure.RNA;
 
 import Source.Chain.Chain;
 import Source.Gene.Gene;
-import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Nucleotide.NucleotideEnum;
 import Source.Structure.Acid.Acid;
 import Source.Structure.Actions.Mutate.Impl.DefaultMutate;
 import Source.Structure.Actions.Mutate.Impl.EmptyMutate;
+import Source.Structure.Actions.Mutate.Mutate;
 import Source.Structure.Actions.Replicate.Impl.DefaultReplicate;
-import Source.Structure.Actions.Split.Impl.DefaultSplit;
-import Source.Structure.Actions.Split.Impl.Mutable.RNAMutableSplit;
+import Source.Structure.Actions.Replicate.Replicate;
+import Source.Structure.Actions.Split.Impl.EmptySplit;
+import Source.Structure.Actions.Split.Splitter.RNASplitter;
+import Source.Structure.Actions.Split.Splitter.Splitter;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
-public class RNA extends Acid {
-    public RNA(ArrayList<Gene> genes) throws UnexpectedException {
-        this.replicate = new DefaultReplicate();
-        this.mutate = new EmptyMutate();
-        this.split = new RNAMutableSplit(new DefaultSplit());
+public class RNA extends Acid implements Cloneable {
+    public RNA(Nucleotide[] nucleotides, Replicate replicate, Mutate mutate, Splitter splitter) throws UnexpectedException {
+        super(
+                replicate,
+                mutate,
+                splitter,
+                MyLoggerFactory.getLogger(RNA.class.getName())
+        );
 
-        this.validateGenes(genes);
-
-        this.genes = genes;
-        this.logger = new MyLogger(RNA.class.getName());
-        this.logger.info("Created " + this.toString());
-    }
-
-    public RNA(Nucleotide[] nucleotides) throws UnexpectedException {
         ArrayList<Gene> genes = new ArrayList<>();
         int geneSize = 2;
 
@@ -44,10 +42,58 @@ public class RNA extends Acid {
         this.validateGenes(genes);
 
         this.genes = genes;
-        this.replicate = new DefaultReplicate();
-        this.mutate = new DefaultMutate();
-        this.split = new RNAMutableSplit(new DefaultSplit());
-        this.logger = new MyLogger(RNA.class.getName());
+        this.logger.info("Created " + this.toString());
+    }
+
+    public RNA(ArrayList<Gene> genes, Replicate replicate, Mutate mutate, Splitter splitter) throws UnexpectedException {
+        super(
+                replicate,
+                mutate,
+                splitter,
+                MyLoggerFactory.getLogger(RNA.class.getName())
+        );
+        this.validateGenes(genes);
+
+        this.genes = genes;
+        this.logger.info("Created " + this.toString());
+    }
+
+    public RNA(ArrayList<Gene> genes) throws UnexpectedException {
+        super(
+                new DefaultReplicate(),
+                new EmptyMutate(),
+                new RNASplitter(new EmptySplit()),
+                MyLoggerFactory.getLogger(RNA.class.getName())
+        );
+        this.validateGenes(genes);
+
+        this.genes = genes;
+        this.logger.info("Created " + this.toString());
+    }
+
+    public RNA(Nucleotide[] nucleotides) throws UnexpectedException {
+        super(
+                new DefaultReplicate(),
+                new DefaultMutate(),
+                new RNASplitter(new EmptySplit()),
+                MyLoggerFactory.getLogger(RNA.class.getName())
+        );
+
+        ArrayList<Gene> genes = new ArrayList<>();
+        int geneSize = 2;
+
+        for (int i = 0; i < nucleotides.length; i += geneSize) {
+            int tempSize = 0;
+            ArrayList<Nucleotide> tempNucleotides = new ArrayList<>();
+
+            while ((i + tempSize) < nucleotides.length && tempSize < geneSize) {
+                tempNucleotides.add(nucleotides[i + tempSize++]);
+            }
+            genes.add(new Gene(new Chain(tempNucleotides)));
+        }
+        this.validateGenes(genes);
+
+        this.genes = genes;
         this.logger.info("Created " + this.toString());
     }
 
@@ -93,18 +139,18 @@ public class RNA extends Acid {
     @Override
     public RNA mutate() throws UnexpectedException {
         this.logger.info("Mutation failed");
-        return new RNA(this.mutate.mutate(this.getGenes(), 0.01f, Nucleotide.getRNANucleotides()));
+        return new RNA(this.actionPack.mutate(this.getGenes(), 0.01f, Nucleotide.getRNANucleotides()));
     }
 
     @Override
     public RNA replicate() throws UnexpectedException {
         logger.info("Replicate RNA " + this.toString());
-        return new RNA(replicate.replicate(this.getGenes(), 0.05f, Nucleotide.getRNANucleotides()));
+        return new RNA(actionPack.replicate(this.getGenes(), 0.05f, Nucleotide.getRNANucleotides()));
     }
 
     public Chain split() {
-        Chain result = split.split(this.getGenes());
-        logger.info("Split RNA " + this.toString() + " to chain " + result.toString());
+        Chain result = actionPack.split(this.getGenes());
+        logger.info("Split RNA " + this.toString() + " to chain " + result);
         return result;
     }
 

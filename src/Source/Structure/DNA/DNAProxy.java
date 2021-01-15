@@ -3,6 +3,7 @@ package Source.Structure.DNA;
 import Source.Chain.Chain;
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Acid.Acid;
 import Source.Structure.Acid.IAcid;
@@ -16,13 +17,13 @@ public class DNAProxy implements IAcid {
 
 
     public DNAProxy(Nucleotide[] nucleotides) throws UnexpectedException {
-        this.logger = new MyLogger(DNAProxy.class.getName());
+        this.logger = MyLoggerFactory.getLogger(DNAProxy.class.getName());
         this.dna = new DNA(nucleotides);
         this.logger.info("Created by Nucleotides" + this.toString());
     }
 
     public DNAProxy(ArrayList<Gene> genes) throws UnexpectedException {
-        this.logger = new MyLogger(DNAProxy.class.getName());
+        this.logger = MyLoggerFactory.getLogger(DNAProxy.class.getName());
         this.dna = new DNA(genes);
         this.logger.info("Created by Genes" + this.toString());
     }

@@ -3,6 +3,7 @@ package Source.Structure.RNA;
 import Source.Chain.Chain;
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Acid.Acid;
 import Source.Structure.Acid.IAcid;
@@ -16,14 +17,14 @@ public class RNAProxy implements IAcid {
 
 
     public RNAProxy(Nucleotide[] nucleotides) throws UnexpectedException {
-        this.logger = new MyLogger(RNAProxy.class.getName());
+        this.logger = MyLoggerFactory.getLogger(RNAProxy.class.getName());
 
         this.logger.info("Created by Nucleotides" + this.toString());
         this.rna = new RNA(nucleotides);
     }
 
     public RNAProxy(ArrayList<Gene> genes) throws UnexpectedException {
-        this.logger = new MyLogger(RNAProxy.class.getName());
+        this.logger = MyLoggerFactory.getLogger(RNAProxy.class.getName());
 
         this.logger.info("Created by Genes" + this.toString());
         this.rna = new RNA(genes);

@@ -3,6 +3,7 @@ package Source.Structure.Actions.Split.Impl.Mutable;
 import Source.Chain.Chain;
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Actions.Mutate.Impl.DefaultMutate;
 import Source.Structure.Actions.Split.Split;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 
 public class RNAMutableSplit extends MutableSplit {
     public RNAMutableSplit(Split splitter) {
-        super(splitter, new MyLogger(RNAMutableSplit.class.getName()), new DefaultMutate());
+        super(splitter, MyLoggerFactory.getLogger(RNAMutableSplit.class.getName()), new DefaultMutate());
         this.logger.info("Created RNAMutableSplit");
     }
 

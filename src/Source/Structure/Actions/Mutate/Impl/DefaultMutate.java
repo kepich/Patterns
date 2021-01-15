@@ -2,10 +2,11 @@ package Source.Structure.Actions.Mutate.Impl;
 
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Actions.Mutate.Mutate;
 import Source.Structure.Actions.Mutate.RandomGenerators.DefaultRandomGenerator;
-import Source.Structure.Actions.Mutate.RandomGenerators.GaussianRandomGeneratorAdapter;
+import Source.Structure.Actions.Mutate.RandomGenerators.GaussianRandomGenerator;
 import Source.Structure.Actions.Mutate.RandomGenerators.IRandomGenerator;
 
 import java.util.ArrayList;
@@ -15,7 +16,7 @@ public class DefaultMutate implements Mutate {
     private IRandomGenerator generator;
 
     public DefaultMutate() {
-        this.logger = new MyLogger(DefaultMutate.class.getName());
+        this.logger = MyLoggerFactory.getLogger(DefaultMutate.class.getName());
         this.logger.info("Created " + this.toString());
     }
 
@@ -27,7 +28,7 @@ public class DefaultMutate implements Mutate {
         if (probability > 0.03){
             this.generator = new DefaultRandomGenerator();
         } else{
-            this.generator = new GaussianRandomGeneratorAdapter();
+            this.generator = new GaussianRandomGenerator();
         }
 
         for (Gene gene : genes) {

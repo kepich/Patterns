@@ -2,32 +2,31 @@ package Source.Structure.DNA;
 
 import Source.Chain.Chain;
 import Source.Gene.Gene;
-import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Nucleotide.NucleotideEnum;
 import Source.Structure.Acid.Acid;
 import Source.Structure.Actions.Mutate.Impl.DefaultMutate;
+import Source.Structure.Actions.Mutate.Mutate;
 import Source.Structure.Actions.Replicate.Impl.DefaultReplicate;
+import Source.Structure.Actions.Replicate.Replicate;
 import Source.Structure.Actions.Split.Impl.DefaultSplit;
 import Source.Structure.Actions.Split.Impl.Mutable.DNAMutableSplit;
+import Source.Structure.Actions.Split.Splitter.DNASplitter;
+import Source.Structure.Actions.Split.Splitter.Splitter;
 
 import java.rmi.UnexpectedException;
 import java.util.ArrayList;
 
-public class DNA extends Acid {
-    public DNA(ArrayList<Gene> genes) throws UnexpectedException {
-        this.replicate = new DefaultReplicate();
-        this.mutate = new DefaultMutate();
-        this.split = new DNAMutableSplit(new DefaultSplit());
+public class DNA extends Acid implements Cloneable{
+    public DNA(Nucleotide[] nucleotides, Replicate replicate, Mutate mutate, Splitter splitter) throws UnexpectedException {
+        super(
+                replicate,
+                mutate,
+                splitter,
+                MyLoggerFactory.getLogger(DNA.class.getName())
+        );
 
-        validateGenes(genes);
-
-        this.genes = genes;
-        this.logger = new MyLogger(DNA.class.getName());
-        this.logger.info("Created " + this.toString());
-    }
-
-    public DNA(Nucleotide[] nucleotides) throws UnexpectedException {
         ArrayList<Gene> genes = new ArrayList<>();
         int geneSize = 4;
 
@@ -41,11 +40,45 @@ public class DNA extends Acid {
             genes.add(new Gene(new Chain(tempNucleotides)));
         }
         validateGenes(genes);
-        this.replicate = new DefaultReplicate();
-        this.mutate = new DefaultMutate();
-        this.split = new DNAMutableSplit(new DefaultSplit());
         this.genes = genes;
-        this.logger = new MyLogger(DNA.class.getName());
+        this.logger.info("Created " + this.toString());
+    }
+
+    public DNA(ArrayList<Gene> genes) throws UnexpectedException {
+        super(
+                new DefaultReplicate(),
+                new DefaultMutate(),
+                new DNASplitter(new DNAMutableSplit(new DefaultSplit())),
+                MyLoggerFactory.getLogger(DNA.class.getName())
+        );
+        validateGenes(genes);
+
+        this.genes = genes;
+        this.logger.info("Created " + this.toString());
+    }
+
+    public DNA(Nucleotide[] nucleotides) throws UnexpectedException {
+        super(
+                new DefaultReplicate(),
+                new DefaultMutate(),
+                new DNASplitter(new DefaultSplit()),
+                MyLoggerFactory.getLogger(DNA.class.getName())
+        );
+
+        ArrayList<Gene> genes = new ArrayList<>();
+        int geneSize = 4;
+
+        for (int i = 0; i < nucleotides.length; i += geneSize) {
+            int tempSize = 0;
+            ArrayList<Nucleotide> tempNucleotides = new ArrayList<>();
+
+            while (((i + tempSize) < nucleotides.length) && tempSize < geneSize) {
+                tempNucleotides.add(nucleotides[i + tempSize++]);
+            }
+            genes.add(new Gene(new Chain(tempNucleotides)));
+        }
+        validateGenes(genes);
+        this.genes = genes;
         this.logger.info("Created " + this.toString());
     }
 
@@ -91,19 +124,19 @@ public class DNA extends Acid {
     @Override
     public DNA replicate() throws UnexpectedException {
         logger.info("Replicate DNA " + this.toString());
-        return new DNA(replicate.replicate(this.getGenes(), 0.05f, Nucleotide.getDNANucleotides()));
+        return new DNA(actionPack.replicate(this.getGenes(), 0.05f, Nucleotide.getDNANucleotides()));
     }
 
     @Override
     public Chain split() {
-        Chain result = split.split(this.getGenes());
+        Chain result = actionPack.split(this.getGenes());
         logger.info("Split DNA " + this.toString() + " to chain " + result.toString());
         return result;
     }
 
     @Override
     public DNA mutate() throws UnexpectedException {
-        DNA result = new DNA(mutate.mutate(this.getGenes(), 0.05f, Nucleotide.getDNANucleotides()));
+        DNA result = new DNA(actionPack.mutate(this.getGenes(), 0.05f, Nucleotide.getDNANucleotides()));
         logger.info("Mutate DNA " + this.toString() + " to chain " + result.toString());
         return result;
     }

@@ -2,6 +2,7 @@ package Source.Structure.Actions.Replicate.Impl;
 
 import Source.Gene.Gene;
 import Source.MyLogger;
+import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Structure.Actions.Replicate.Replicate;
 
@@ -11,7 +12,7 @@ public class DefaultReplicate implements Replicate {
     private MyLogger logger;
 
     public DefaultReplicate() {
-        this.logger = new MyLogger(DefaultReplicate.class.getName());
+        this.logger = MyLoggerFactory.getLogger(DefaultReplicate.class.getName());
         this.logger.info("Created " + this.toString());
     }
 

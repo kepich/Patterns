@@ -6,6 +6,7 @@ import java.util.Random;
 public class Nucleotide {
     private NucleotideEnum type;
     private static Random random = new Random();
+    private static NucleotideManager nucleotideManager = NucleotideManager.instance();
 
     public Nucleotide(NucleotideEnum type) {
         this.type = type;
@@ -17,46 +18,24 @@ public class Nucleotide {
 
     @Override
     public String toString() {
-        return "Nucleotide {" +
-                "type=" + type +
-                '}';
-    }
-
-    public static NucleotideEnum getDNAComplimentary(NucleotideEnum type) {
-        return switch (type) {
-            case TIMIN -> NucleotideEnum.ADENIN;
-            case ADENIN -> NucleotideEnum.TIMIN;
-            case GUANIN -> NucleotideEnum.CITOZIN;
-            case CITOZIN -> NucleotideEnum.GUANIN;
-            default -> null;
-        };
-    }
-
-    public static NucleotideEnum getRNAComplimentary(NucleotideEnum type) {
-        return switch (type) {
-            case TIMIN -> NucleotideEnum.ADENIN;
-            case ADENIN -> NucleotideEnum.TIMIN;
-            case GUANIN -> NucleotideEnum.URACIL;
-            case URACIL -> NucleotideEnum.GUANIN;
-            default -> null;
-        };
+        return type.toString();
     }
 
     public static Nucleotide[] getDNANucleotides() {
         return new Nucleotide[]{
-                new Nucleotide(NucleotideEnum.ADENIN),
-                new Nucleotide(NucleotideEnum.GUANIN),
-                new Nucleotide(NucleotideEnum.CITOZIN),
-                new Nucleotide(NucleotideEnum.TIMIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.ADENIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.GUANIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.CITOZIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.TIMIN),
         };
     }
 
     public static Nucleotide[] getRNANucleotides() {
         return new Nucleotide[]{
-                new Nucleotide(NucleotideEnum.ADENIN),
-                new Nucleotide(NucleotideEnum.GUANIN),
-                new Nucleotide(NucleotideEnum.CITOZIN),
-                new Nucleotide(NucleotideEnum.URACIL),
+                nucleotideManager.getNucleotide(NucleotideEnum.ADENIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.GUANIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.CITOZIN),
+                nucleotideManager.getNucleotide(NucleotideEnum.URACIL),
         };
     }
 
