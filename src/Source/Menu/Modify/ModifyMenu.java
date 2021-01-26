@@ -1,6 +1,7 @@
 package Source.Menu.Modify;
 
 import Source.Menu.AppState;
+import Source.Menu.StartMenu;
 
 import java.rmi.UnexpectedException;
 
@@ -21,7 +22,7 @@ public class ModifyMenu extends AppState {
                 case "1" -> result = new AcidModifyMenu();
                 case "2" -> result = new GeneModifyMenu();
                 case "3" -> result = new ChainModifyMenu();
-                case "4" -> result = new ModifyMenu();
+                case "4" -> result = new StartMenu();
                 default -> {
                     System.out.println("Incorrect input! Try again!");
                     continue;

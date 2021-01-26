@@ -1,6 +1,7 @@
 package Source.Menu;
 
 import Source.Menu.Add.AddMenu;
+import Source.Menu.Modify.ModifyMenu;
 import Source.Menu.Show.ShowMenu;
 
 public class StartMenu extends AppState {
@@ -24,6 +25,7 @@ public class StartMenu extends AppState {
                     result = new ShowMenu();
                     break;
                 case "3":
+                    result = new ModifyMenu();
                     break;
                 case "4":
                     break;

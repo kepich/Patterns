@@ -12,10 +12,10 @@ import Source.Structure.Actions.Split.Splitter.Splitter;
 import java.util.ArrayList;
 
 public class ActionPack {
-    private MyLogger logger;
-    private Replicate replicate;
-    private Mutate mutate;
-    private Splitter splitter;
+    private final MyLogger logger;
+    private final Replicate replicate;
+    private final Mutate mutate;
+    private final Splitter splitter;
 
     public ActionPack(Replicate replicate, Mutate mutate, Splitter splitter){
         this.replicate = replicate;

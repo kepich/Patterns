@@ -25,7 +25,7 @@ public abstract class AppState {
     protected void printAcids(){
         System.out.println("Acids:");
         for(Acid acid: acids){
-            System.out.println("\t" + acids.indexOf(acid) + acid.toString());
+            System.out.println("\t" + acids.indexOf(acid) + ". " + acid.toString());
         }
         System.out.println("");
     }
@@ -33,7 +33,7 @@ public abstract class AppState {
     protected void printGenes(){
         System.out.println("Genes:");
         for(Gene gene: genes){
-            System.out.println("\t" + genes.indexOf(gene) + gene.toString());
+            System.out.println("\t" + genes.indexOf(gene) + ". " + gene.toString());
         }
         System.out.println("");
     }
@@ -41,7 +41,7 @@ public abstract class AppState {
     protected void printChains(){
         System.out.println("Chains:");
         for(Chain chain: chains){
-            System.out.println("\t" + chains.indexOf(chain) + chain.toString());
+            System.out.println("\t" + chains.indexOf(chain) + ". " + chain.toString());
         }
         System.out.println("");
     }

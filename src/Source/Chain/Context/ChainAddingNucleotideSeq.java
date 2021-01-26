@@ -1,7 +1,6 @@
 package Source.Chain.Context;
 
 import Source.Chain.Chain;
-import Source.MyLogger;
 import Source.MyLoggerFactory;
 import Source.Nucleotide.Nucleotide;
 import Source.Nucleotide.NucleotideEnum;

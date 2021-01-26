@@ -24,28 +24,8 @@ public class Chain {
         this.logger.info("Created " + this.toString());
     }
 
-    public Chain getDNAComplimentary() {
-        Chain result = new Chain(
-                this.nucleotides.stream()
-                        .map(nucleotide -> nucleotideManager.getNucleotide(NucleotideEnum.getDNAComplimentary(nucleotide.getType())))
-                        .collect(Collectors.toList())
-        );
-        this.logger.info("Get complimentary DNA " + this.toString());
-        return result;
-    }
-
     public void addNucleotide(Nucleotide nucleotide){
         this.nucleotides.add(nucleotide);
-    }
-
-    public Chain getRNAComplimentary() {
-        Chain result = new Chain(
-                this.nucleotides.stream()
-                        .map(nucleotide -> nucleotideManager.getNucleotide(NucleotideEnum.getRNAComplimentary(nucleotide.getType())))
-                        .collect(Collectors.toList())
-        );
-        this.logger.info("Get complimentary RNA " + this.toString());
-        return result;
     }
 
     public void setNucleotide(Integer position, Nucleotide nucleotide) {
@@ -97,43 +77,4 @@ public class Chain {
             if (random.nextFloat() < probability)
                 this.setNucleotide(i, Nucleotide.getRandomNucleotide(availableNucleotides));
     }
-
-    public Memento createMemento(){
-        return new Memento(this.nucleotides);
-    }
-
-    public void resetState(Memento mem){
-        this.logger.info("Reset state");
-        this.nucleotides = new ArrayList<>();
-        NucleotideManager manager = NucleotideManager.instance();
-        for(Nucleotide nucleotide: mem.mem){
-            this.nucleotides.add(manager.getNucleotide(nucleotide.getType()));
-        }
-    }
-
-    public class Memento {
-        private ArrayList<Nucleotide> mem;
-        private MyLogger logger;
-
-        public Memento(List<Nucleotide> mem){
-            this.mem = new ArrayList<>();
-            this.logger = MyLoggerFactory.getLogger(Memento.class.getName());
-            this.logger.info("Created memento");
-            this.setState(mem);
-        }
-
-        private void setState(List<Nucleotide> mem){
-            this.logger.info("(MEMENTO) Set state");
-            NucleotideManager manager = NucleotideManager.instance();
-            for(Nucleotide nucleotide: mem){
-                this.mem.add(manager.getNucleotide(nucleotide.getType()));
-            }
-        }
-
-        private ArrayList<Nucleotide> getState(){
-            this.logger.info("(MEMENTO) getState");
-            return this.mem;
-        }
-    }
-
 }
